@@ -1,24 +1,31 @@
-import React from 'react'
+import React, { useState } from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Axios from 'axios'
+Axios.defaults.baseURL = 'http://localhost:8080'
 
 // Site Layout
-import Header from '../components/Header'
-import Footer from '../components/Footer'
+import Header from './components/Header'
+import Footer from './components/Footer'
 
 // Site Structure
-import HomeGuest from '../components/HomeGuest'
-import About from '../components/About'
-import Terms from '../components/Terms'
+import HomeGuest from './components/HomeGuest'
+import Home from './components/Home'
+import About from './components/About'
+import Terms from './components/Terms'
+import CreatePost from './components/CreatePost'
 
 function Main() {
+    const [loggedIn, setLoggedIn] = useState(Boolean(localStorage.getItem('complexappToken')))
+
     return (
         <BrowserRouter>
-            <Header />
+            <Header loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
             <Routes>
-                <Route path='/' element={<HomeGuest />} />
+                <Route path='/' element={ loggedIn ? <Home /> : <HomeGuest /> } />
                 <Route path='/about-us' element={<About />} />
                 <Route path='/terms' element={<Terms />} />
+                <Route path='/create-post' element={<CreatePost />} />
             </Routes>
             <Footer />
         </BrowserRouter>
