@@ -2,8 +2,9 @@ import React, { useEffect, useState, useReducer } from 'react'
 import ReactDOM from 'react-dom/client'
 import { useImmerReducer } from 'use-immer'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Axios from 'axios'
-Axios.defaults.baseURL = 'http://localhost:8080'
+import { CSSTransition } from 'react-transition-group'
+import axios from 'axios'
+axios.defaults.baseURL = 'http://localhost:8080'
 
 import StateContext from './StateContext'
 import DispatchContext from './DispatchContext'
@@ -11,6 +12,7 @@ import DispatchContext from './DispatchContext'
 // Site Layout
 import Header from './components/Header'
 import Footer from './components/Footer'
+import Search from './components/Search'
 
 // Site Structure
 import HomeGuest from './components/HomeGuest'
@@ -20,6 +22,9 @@ import Terms from './components/Terms'
 import CreatePost from './components/CreatePost'
 import ViewSinglePost from './components/ViewSinglePost'
 import FlashMessages from './components/FlashMessages'
+import Profile from './components/Profile'
+import EditPost from './components/EditPost'
+import NotFound from './components/NotFound'
 
 function Main() {
 
@@ -30,7 +35,8 @@ function Main() {
             token: localStorage.getItem('complexappToken'),
             username: localStorage.getItem('complexappUsername'),
             avatar: localStorage.getItem('complexappAvatar')
-        }
+        },
+        isSearchOpen: false
     }
 
     function ourReducer(draft, action) {
@@ -44,6 +50,12 @@ function Main() {
                 return
             case 'flashMessage':
                 draft.flashMessages.push(action.value)
+                return
+            case 'openSearch':
+                draft.isSearchOpen = true
+                return
+            case 'closeSearch':
+                draft.isSearchOpen = false
                 return
         }
     }
@@ -74,10 +86,16 @@ function Main() {
                         <Route path='/terms' element={<Terms />} />
                         <Route path='/create-post' element={<CreatePost />} />
                         <Route path='/post/:id' element={<ViewSinglePost />} />
+                        <Route path='/post/:id/edit' element={<EditPost />} />
+                        <Route path='/profile/:username/*' element={<Profile />} />
+                        <Route path='*' element={<NotFound />} />
                     </Routes>
+                    <CSSTransition timeout={330} in={state.isSearchOpen} classNames='search-overlay' unmountOnExit>
+                        <Search />
+                    </CSSTransition>
                     <Footer />
                 </BrowserRouter>
-            </DispatchContext.Provider>}
+            </DispatchContext.Provider>
         </StateContext.Provider>
     )
 }

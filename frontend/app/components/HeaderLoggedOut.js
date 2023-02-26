@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
-import Axios from 'axios'
+import axios from 'axios'
 
 import DispatchContext from '../DispatchContext'
 
@@ -11,7 +11,7 @@ function HeaderLoggedOut(props) {
     async function handleSubmit(e) {
         e.preventDefault()
         try {
-            const response = await Axios.post('/login', {username, password})
+            const response = await axios.post('/login', {username, password})
             if (response.data) {
                 appDispatch({ type: 'login', data: response.data })
             } else {

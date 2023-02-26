@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Axios from 'axios'
+import axios from 'axios'
 
 import Page from './Page'
 
@@ -12,7 +12,7 @@ function HomeGuest() {
     async function handleSubmit(e) {
         e.preventDefault()
         try {
-            await Axios.post('/register', { username, email, password })
+            await axios.post('/register', { username, email, password })
             console.log('User was successfully created.')
         } catch(e) {
             console.log(e.response.data)
